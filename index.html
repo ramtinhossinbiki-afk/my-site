@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Birthday Page with Games</title>
+<title>صفحه تولد با بازی‌ها</title>
 
 <style>
 :root{
@@ -45,6 +45,7 @@ nav a{color:var(--muted);text-decoration:none;margin:0 8px}
   font-weight:700;
   cursor:pointer;
   transition:all 0.3s ease;
+  margin-top: 16px;
 }
 .btn:hover, .play-btn:hover {
   background: rgba(255,255,255,0.4);
@@ -76,12 +77,25 @@ input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
 .overlay-content{background:rgba(255,255,255,0.95);padding:20px;border-radius:12px;max-width:90%;width:800px;position:relative}
 .overlay-content iframe{width:100%;height:500px;border-radius:12px;border:none}
 .overlay .close-btn{position:absolute;top:10px;right:10px;z-index:10}
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
 @media(max-width:800px){
   .hero{flex-direction:column-reverse}
   .page-two{flex-direction:column}
   .page-two .img-side{width:100%}
   .creator{flex-direction:column;align-items:flex-start}
   .overlay-content{width:95%;height:90%}
+  .image-section {
+    padding: 16px;
+  }
 }
 </style>
 </head>
@@ -90,182 +104,35 @@ input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
 
 <header>
   <div class="container nav">
-    <div class="logo">HAPPY BIRTHDAY</div>
-
-    <nav>
-      <a href="#section1">Music</a>
-      <a href="#section2">Picture</a>
-      
+    <div class="logo">تولدت مبارک!</div>
   </div>
 </header>
 
 <main class="container">
-
-  <section id="section1" class="section">
-    <div class="hero">
-      <div class="left">
-        <button class="play-btn" id="playToggle" aria-pressed="false">Music</button>
-        <audio id="t-audio" preload="none">
-          <source src="https://raw.githubusercontent.com/ramtinhossinbiki-afk/my-html-site/main/h.mp3" type="audio/mpeg">
-        </audio>
-      </div>
-
-<section id="section2" class="section">
-    <div class="hero">
-      <div class="left">
-        <button class="play-btn" id="playToggle" aria-pressed="false">Picture</button>
-        <audio id="t-audio" preload="none">
-          <source src="https://raw.githubusercontent.com/ramtinhossinbiki-afk/my-html-site/main/h.mp3" type="audio/mpeg">
-        </audio>
-      </div>
-
-      <div style="width:420px;text-align:center;">
-        <img id="hero-img" class="img" src="https://raw.githubusercontent.com/ramtinhossinbiki-afk/my-html-site/main/craiyon_203931_Sponge_bob_themed_birthday_card.png">
-      </div>
-    </div>
+  <!-- بخش اول: عکس و دکمه -->
+  <section class="image-section">
+    <img class="img" src="https://pwc.res.zabanshenas.ir/jme_video_chh_my_shwd_906b09f3d3.jpg" alt="کارت تولد باب اسفنجی">
+    <button class="play-btn" onclick="window.open('https://example.com/link1', '_blank')">باز کردن لینک ۱</button>
   </section>
-
-
-<script>
-// -------- LANGUAGE SYSTEM ----------
-const langBtn = document.getElementById("langToggle");
-
-const texts = {
-  en: {
-    msgBirth: "Kasra, today is your day; the day when all smiles light up just for you. May your path be filled with joy, laughter, and all the good things in life!",
-    designerSmall: "This page is designed for Kasra's happiness...",
-    sendTitle: "Send Birthday Greetings",
-    yourName: "Your Name",
-    yourGmail: "Your Gmail",
-    yourText: "Your Text",
-    post: "Post",
-    msgTitle: "Message for Birth",
-    builderTitle: "Page Builder",
-    designerTitle: "Designer: Ramtin HB",
-    gamesTitle: "Games",
-    game1Text: "Minecraft: Explore and build in the classic world of Minecraft.",
-    game2Text: "Crazy Game: Play fun online games at Crazy Games website.",
-    aiTitle: "Artificial Intelligence",
-    chatText: "Chat GPT",
-    copilotText: "Copilot",
-    moreTitle: "More Pictures",
-    morTitle: "GIFT CARD"
-  },
-  fa: {
-    msgBirth: "کسری امروز روز توست؛ روزی که همه لبخندها مخصوص تو روشن می‌شوند. امیدوارم مسیرت پر از شادی، خنده و بهترین اتفاق‌ها باشد!",
-    designerSmall: "این صفحه برای خوشحال کردن کسری طراحی شده...",
-    sendTitle: "ارسال پیام تبریک",
-    yourName: "نام شما",
-    yourGmail: "ایمیل شما",
-    yourText: "متن پیام",
-    post: "ارسال",
-    msgTitle: "پیام تبریک",
-    builderTitle: "سازنده صفحه",
-    designerTitle: "طراح: رامتین HB",
-    gamesTitle: "بازی‌ها",
-    game1Text: "Minecraft: در دنیای کلاسیک ماینکرافت کاوش و ساخت کنید.",
-    game2Text: "Crazy Game: بازی‌های آنلاین سرگرم‌کننده در وبسایت Crazy Games.",
-    aiTitle: "هوش مصنوعی",
-    chatText: "چت GPT",
-    copilotText: "کاپی‌لوت",
-    moreTitle: "تصاویر بیشتر",
-    morTitle: "کارت هدیه"
-  }
-};
-
-function setLang(lang){
-  localStorage.setItem("lang", lang);
-
-  // متن‌ها
-  document.getElementById("birth-text").textContent = texts[lang].msgBirth;
-  document.getElementById("designer-small").textContent = texts[lang].designerSmall;
-  document.getElementById("send-title").textContent = texts[lang].sendTitle;
-
-  document.getElementById("sender-name").placeholder = texts[lang].yourName;
-  document.getElementById("sender-email").placeholder = texts[lang].yourGmail;
-  document.getElementById("sender-msg").placeholder = texts[lang].yourText;
-
-  document.getElementById("send-btn").textContent = texts[lang].post;
-
-  document.getElementById("msg-title").textContent = texts[lang].msgTitle;
-  document.getElementById("builder-title").textContent = texts[lang].builderTitle;
-  document.getElementById("designer-title").textContent = texts[lang].designerTitle;
-  document.getElementById("games-title").textContent = texts[lang].gamesTitle;
-  document.getElementById("game1-text").textContent = texts[lang].game1Text;
-  document.getElementById("game2-text").textContent = texts[lang].game2Text;
-  document.getElementById("ai-title").textContent = texts[lang].aiTitle;
-  document.getElementById("chat-text").textContent = texts[lang].chatText;
-  document.getElementById("copilot-text").textContent = texts[lang].copilotText;
-  document.getElementById("more-title").textContent = texts[lang].moreTitle;
-  document.getElementById("mor-title").textContent = texts[lang].morTitle;
-
-  // تغییر متن دکمه
-  langBtn.textContent = lang === "en" ? "FA" : "EN";
-}
-
-// بارگذاری اولیه زبان
-setLang(localStorage.getItem("lang") || "en");
-
-// تغییر زبان با دکمه
-langBtn.addEventListener("click", ()=>{
-  const current = localStorage.getItem("lang") || "en";
-  setLang(current === "en" ? "fa" : "en");
-});
-
-// -------- HERO SLIDESHOW ----------
-const heroImg = document.getElementById("hero-img");
-const heroPics = [
-  "https://cdn.nody.ir/files/2023/02/25/nody-%D8%A8%D8%B1%D8%A7%DB%8C-%D9%BE%D8%B1%D9%88%D9%81%D8%A7%DB%8C%D9%84-1677312322.jpg",
-  "https://cdn.nody.ir/files/2023/02/25/nody-%D9%BE%D8%A7%D8%AA%D8%B1%DB%8C%DA%A9-%DA%A9%DB%8C%D9%88%D8%AA-1677312323.jpg",
-  "https://www.jowhareh.com/images/Jowhareh/galleries_11/large_27fc96bf-b1c0-43cf-911c-76a5178ccc5d.webp",
-  "https://raw.githubusercontent.com/ramtinhossinbiki-afk/my-html-site/main/craiyon_203931_Sponge_bob_themed_birthday_card.png",
   
-];
-let index = 0;
-setInterval(() => {
-  index = (index + 1) % heroPics.length;
-  heroImg.src = heroPics[index];
-}, 5000);
+  <!-- بخش دوم: عکس و دکمه -->
+  <section class="image-section">
+    <img class="img" src="https://s.cafebazaar.ir/images/icons/com.knkelly.suno-e2c66686-da90-44da-a869-3c3972b19bbb_512x512.png?x-img=v1/format,type_webp,lossless_false/resize,h_256,w_256,lossless_false/optimize" alt="تصویر تولد">
+    <button class="play-btn" onclick="window.open('https://example.com/link2', '_blank')">باز کردن لینک ۲</button>
+  </section>
+  
+  <!-- بخش سوم: عکس و دکمه -->
+  <section class="image-section">
+    <img class="img" src="https://cdn.nody.ir/files/2023/02/25/nody-%D9%BE%D8%A7%D8%AA%D8%B1%DB%8C%DA%A9-%DA%A9%DB%8C%D9%88%D8%AA-1677312323.jpg" alt="تصویر تولد">
+    <button class="play-btn" onclick="window.open('https://example.com/link3', '_blank')">باز کردن لینک ۳</button>
+  </section>
+</main>
 
-// -------- MUSIC BUTTON ----------
-const btn = document.getElementById('playToggle');
-const audio = document.getElementById('t-audio');
-btn.addEventListener('click', ()=>{
-  if(audio.paused){
-    audio.play();
-    btn.textContent='stop';
-  } else {
-    audio.pause();
-    audio.currentTime=0;
-    btn.textContent='play again';
-  }
-});
-
-// -------- EMAIL SEND ----------
-function handleMail(e){
-  e.preventDefault();
-  const name = encodeURIComponent(document.getElementById('sender-name').value);
-  const email = encodeURIComponent(document.getElementById('sender-email').value);
-  const msg = encodeURIComponent(document.getElementById('sender-msg').value +
-    "\n\n---\nSent by: " + decodeURIComponent(name) + " (<" + decodeURIComponent(email) + ">)");
-
-  const receiver = "example@gmail.com";
-  const subject = encodeURIComponent('Birthday Greetings');
-
-  window.location.href = `mailto:${receiver}?subject=${subject}&body=${msg}`;
-  return false;
-}
-
-// -------- GAME OVERLAY ----------
-function openOverlay(url){
-  document.getElementById('gameFrame').src = url;
-  document.getElementById('gameOverlay').style.display = 'flex';
-}
-function closeOverlay(){
-  document.getElementById('gameOverlay').style.display = 'none';
-  document.getElementById('gameFrame').src = '';
-}
-</script>
+<footer>
+  <div class="container">
+    <p>طراحی شده با ❤️ برای جشن تولد</p>
+  </div>
+</footer>
 
 </body>
 </html>
