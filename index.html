@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>??? ???? — ??????</title>
+<style>
+  :root{
+    --bg1: #f4f7fb;
+    --bg2: #eef5ff;
+    --card: rgba(255,255,255,0.7);
+    --glass: rgba(255,255,255,0.55);
+    --accent: rgba(30,144,255,0.95);
+    --muted: #6b7280;
+    --text: #0f1724;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family: "Vazir", "Segoe UI", Tahoma, Arial, sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:28px auto;padding:18px;display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+  /* ???? ??????? */
+  .card{background: var(--card);border-radius:14px;padding:16px;box-shadow: 0 8px 30px rgba(15,23,36,0.08);border:1px solid rgba(15,23,36,0.04);backdrop-filter: blur(6px)}
+  .title{font-weight:700;font-size:1.1rem;margin-bottom:8px}
+  .muted{color:var(--muted);font-size:13px}
+
+  /* ???????? */
+  label{display:block;font-size:13px;margin-top:10px;color:var(--muted)}
+  input[type="text"], input[type="password"], textarea{
+    width:100%;padding:12px;border-radius:12px;border:1px solid rgba(15,23,36,0.06);background:transparent;color:var(--text);margin-top:6px;font-size:14px;outline:none;
+  }
+  textarea{min-height:88px;resize:vertical}
+
+  /* ???? ??? ??????? ??? */
+  .btn{
+    display:inline-flex;gap:10px;align-items:center;justify-content:center;
+    padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.6);
+    background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6));
+    color:var(--text);font-weight:700;cursor:pointer;box-shadow: 0 6px 18px rgba(15,23,36,0.06);transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform: translateY(-4px);box-shadow:0 10px 30px rgba(15,23,36,0.12)}
+  .btn-accent{background: linear-gradient(90deg,var(--accent),#6fb7ff);color:white;border:none}
+
+  /* ???? ????? */
+  .status{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px}
+
+  /* ???? ??????? */
+  .messages{height:62vh;overflow:auto;padding:12px;display:flex;flex-direction:column-reverse;gap:12px}
+  .message{
+    align-self:flex-start;max-width:86%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.8));
+    border-radius:12px;padding:10px;border:1px solid rgba(15,23,36,0.04);color:var(--text);
+    box-shadow:0 6px 18px rgba(15,23,36,0.04)
+  }
+  .message.me{align-self:flex-end;background:linear-gradient(90deg,var(--accent),#6fb7ff);color:white}
+  .meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+
+  /* ???????? ????? */
+  .controls{display:flex;gap:10px;align-items:center;margin-top:12px}
+  .glass-small{padding:8px 12px;border-radius:999px;border:1px solid rgba(15,23,36,0.05);background:rgba(255,255,255,0.5);cursor:pointer}
+
+  /* ????????? */
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr; padding:12px}
+    .messages{height:50vh}
+  }
+
+  /* ????? ???? */
+  .hint{font-size:13px;color:var(--muted);margin-top:8px}
+  .danger{color:#b91c1c;font-weight:700}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- SIDEBAR: ???? -->
+    <aside class="card" aria-label="????">
+      <div class="title">???? / ??????? (??? + ??)</div>
+      <div class="muted">?? ?? ??? ? ?? ???? ?? — ????? ?? ????? ???? ????.</div>
+
+      <label>??? ????? ????????</label>
+      <input id="inpName" type="text" placeholder="????? ramtin123" maxlength="30">
+
+      <label>?? (PIN)</label>
+      <input id="inpPin" type="password" placeholder="????? 4 ???????" maxlength="30">
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button id="btnLogin" class="btn btn-accent">???? / ???????</button>
+        <button id="btnLogout" class="btn" style="display:none">????</button>
+      </div>
+
+      <div class="status">
+        <div>
+          <div class="muted">????? ????</div>
+          <div id="userStatus" class="title" style="font-size:0.98rem">???? ?? ??????</div>
+        </div>
+      </div>
+
+      <div class="hint">????: ??????? ??? ??? ?????? ??? ????? ?????? ? ???? ??????? ?? ???? ?????? ???.</div>
+    </aside>
+
+    <!-- MAIN: ????? ? ?????? ???? -->
+    <main class="card" aria-label="??">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="title">???????</div>
+          <div class="muted">??? ??? — ???? ???? ???????? ???? ??? «???????? ???????» ???</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="btnLoad" class="btn">???????? ???????</button>
+          <button id="btnClearAll" class="btn" title="??? ??? ???????? ????">??? ???</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <textarea id="txtMessage" placeholder="???? ??? ?? ?????..." maxlength="2000"></textarea>
+        <div class="controls">
+          <button id="btnSend" class="btn btn-accent">????? ????</button>
+          <div style="margin-left:auto" class="muted">???: ???? ????? ?? ??????</div>
+        </div>
+      </div>
+
+      <hr style="margin:14px 0;border:none;border-top:1px solid rgba(15,23,36,0.04)">
+
+      <div class="title" style="font-size:1rem;margin-bottom:8px">??????? (???????? ????)</div>
+      <div id="messages" class="messages" aria-live="polite" aria-atomic="true">
+        <!-- ??????? ????? ???? ??????? -->
+      </div>
+    </main>
+  </div>
+
+<script>
+/*
+  Single-file local chat
+  - Users stored in localStorage.users map: { uid: {name, pinHash, createdAt}}
+  - Current user in localStorage.currentUser = uid
+  - Messages in localStorage.messages = [{id, uid, name, text, time}]
+  - load messages: non-realtime (????? ???? ???? ???????? ?? ????)
+  NOTE: ??? ????? ??????/???? ???? ???? ??????? ? ????? ????? ???? ?? ?????? ?? ????? ???? ???.
+*/
+
+const LS_USERS_KEY = 'localchat_users_v1';
+const LS_CURRENT_KEY = 'localchat_current_v1';
+const LS_MESSAGES_KEY = 'localchat_messages_v1';
+
+// ????????
+const inpName = document.getElementById('inpName');
+const inpPin = document.getElementById('inpPin');
+const btnLogin = document.getElementById('btnLogin');
+const btnLogout = document.getElementById('btnLogout');
+const userStatus = document.getElementById('userStatus');
+
+const txtMessage = document.getElementById('txtMessage');
+const btnSend = document.getElementById('btnSend');
+const btnLoad = document.getElementById('btnLoad');
+const btnClearAll = document.getElementById('btnClearAll');
+const messagesEl = document.getElementById('messages');
+
+let users = {}; // uid -> {name, pinHash, createdAt}
+let currentUid = null;
+let messages = []; // array of message objects
+
+// helper: generate uid
+function uid(){ return 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+
+// helper: sha-256 for PIN hashing (returns hex string)
+async function hashText(txt){
+  const enc = new TextEncoder();
+  const data = enc.encode(txt);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  const arr = Array.from(new Uint8Array(hash));
+  return arr.map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// load from localStorage
+function loadState(){
+  try{
+    users = JSON.parse(localStorage.getItem(LS_USERS_KEY) || '{}');
+  }catch(e){ users = {}; }
+  try{
+    currentUid = localStorage.getItem(LS_CURRENT_KEY) || null;
+  }catch(e){ currentUid = null; }
+  try{
+    messages = JSON.parse(localStorage.getItem(LS_MESSAGES_KEY) || '[]');
+  }catch(e){ messages = []; }
+  refreshUI();
+}
+
+// save helpers
+function saveUsers(){ localStorage.setItem(LS_USERS_KEY, JSON.stringify(users)); }
+function saveCurrent(){ if(currentUid) localStorage.setItem(LS_CURRENT_KEY, currentUid); else localStorage.removeItem(LS_CURRENT_KEY); }
+function saveMessages(){ localStorage.setItem(LS_MESSAGES_KEY, JSON.stringify(messages)); }
+
+// update UI based on login
+function refreshUI(){
+  if(currentUid && users[currentUid]){
+    userStatus.textContent = `???? ???: ${users[currentUid].name}`;
+    btnLogin.style.display = 'none';
+    btnLogout.style.display = 'inline-flex';
+    inpName.value = users[currentUid].name;
+  } else {
+    userStatus.textContent = '???? ?? ??????';
+    btnLogin.style.display = 'inline-flex';
+    btnLogout.style.display = 'none';
+  }
+}
+
+// login or signup
+btnLogin.addEventListener('click', async ()=>{
+  const name = (inpName.value || '').trim();
+  const pin = (inpPin.value || '').trim();
+  if(!name || pin.length < 4){ alert('????? ??? ? ?? (????? 4 ???????) ?? ???? ??'); return; }
+
+  // check if a user with this name exists
+  const existingUid = Object.keys(users).find(k => users[k].name.toLowerCase() === name.toLowerCase());
+  const pinHash = await hashText(pin);
+
+  if(existingUid){
+    // try login
+    if(users[existingUid].pinHash === pinHash){
+      currentUid = existingUid;
+      saveCurrent();
+      refreshUI();
+      alert('???? ????');
+    } else {
+      alert('?? ?????? ???');
+    }
+  } else {
+    // create new user
+    const newUid = uid();
+    users[newUid] = { name: name, pinHash: pinHash, createdAt: Date.now() };
+    saveUsers();
+    currentUid = newUid;
+    saveCurrent();
+    refreshUI();
+    alert('???? ????? ?? ? ???? ???');
+  }
+
+  // clear pin input for safety
+  inpPin.value = '';
+});
+
+// logout
+btnLogout.addEventListener('click', ()=>{
+  if(confirm('?????')){ currentUid = null; saveCurrent(); refreshUI(); }
+});
+
+// send message (only text)
+btnSend.addEventListener('click', ()=>{
+  const text = (txtMessage.value || '').trim();
+  if(!text) return alert('????? ??? ???? ??');
+  if(!currentUid || !users[currentUid]) return alert('????? ???? ??');
+
+  const msg = {
+    id: 'm_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,6),
+    uid: currentUid,
+    name: users[currentUid].name,
+    text: text,
+    time: Date.now()
+  };
+  messages.push(msg);
+  saveMessages();
+  txtMessage.value = '';
+  alert('???? ????? ??. ?????? ???? ???? ?? ???? "???????? ???????" ?? ?????.');
+});
+
+// load messages (non-realtime). newest shown first
+btnLoad.addEventListener('click', ()=>{
+  renderMessages();
+});
+
+// delete all messages (local)
+btnClearAll.addEventListener('click', ()=>{
+  if(confirm('??? ?????? ???? ???????? ???? ??? ????')){ messages = []; saveMessages(); renderMessages(); alert('??? ??'); }
+});
+
+// render messages to DOM (newest at top per UI request)
+function renderMessages(){
+  messagesEl.innerHTML = '';
+  // show newest first
+  const arr = messages.slice().sort((a,b)=> b.time - a.time);
+  if(arr.length === 0){
+    const n = document.createElement('div'); n.className='muted'; n.textContent='??? ????? ????? ????.';
+    messagesEl.appendChild(n); return;
+  }
+  arr.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'message' + (m.uid === currentUid ? ' me' : '');
+    const meta = document.createElement('div'); meta.className='meta';
+    const t = new Date(m.time);
+    meta.textContent = `${m.name} — ${t.toLocaleString()}`;
+    const p = document.createElement('div'); p.textContent = m.text;
+    div.appendChild(meta);
+    div.appendChild(p);
+    messagesEl.appendChild(div);
+  });
+}
+
+// initial load
+loadState();
+
+// small UX: send on Ctrl+Enter
+txtMessage.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' && e.ctrlKey){ btnSend.click(); } });
+
+</script>
+</body>
+</html>
